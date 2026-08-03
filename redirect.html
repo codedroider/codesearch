@@ -28,7 +28,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('goto')) {
         const gotoUrl = urlParams.get('goto');
-        window.open('https://codesearch.neocities.org');
+        window.open('https://codedroider.github.io/codesearch');
         window.open(gotoUrl);
         alert('Allow pop-ups!')
       } 
@@ -43,7 +43,7 @@
   }
 
   const encodedUrl = encodeURIComponent(url);
-  const resultLink = `codesearch.neocities.org/redirect?goto=${encodedUrl}`;
+  const resultLink = `codedroider.github.io/codesearch/redirect?goto=${encodedUrl}`;
   
   navigator.clipboard.writeText(resultLink).then(() => {
     alert(`Copied!`);
