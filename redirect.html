@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background-color: #dae0e5;
+  }
+  h1 {
+    text-align: center;
+  }
+  a {
+    text-align: center;
+  }
+  body {
+    font-family: 'Arial', sans-serif;
+  }
+</style>
+<link rel="icon" href="favicon.png" type="image/png" />
+</head>
+  <body>
+<html lang="ru">
+  <meta charset="UTF-8" />
+  <title>redirect by codesearch</title>
+  <script>
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('goto')) {
+        const gotoUrl = urlParams.get('goto');
+        window.open('https://codesearch.neocities.org');
+        window.open(gotoUrl);
+        alert('Allow pop-ups!')
+      } 
+      else {
+        (function() {
+  const generatorName = "codesearch-redirect";
+
+  const url = prompt(`Enter URL (with http:// or https://) for create redirect via ${generatorName}:`);
+  if (!url) {
+    alert("Error. Reload page, please!");
+    return;
+  }
+
+  const encodedUrl = encodeURIComponent(url);
+  const resultLink = `codesearch.neocities.org/redirect?goto=${encodedUrl}`;
+  
+  navigator.clipboard.writeText(resultLink).then(() => {
+    alert(`Copied!`);
+  }).catch(() => {
+    alert(`Error copy. Your link: \n${resultLink}`);
+  });
+})();
+      }
+    };
+  </script>
+</body>
+</html>
+  </body>
+</html>
