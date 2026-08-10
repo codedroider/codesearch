@@ -28,8 +28,8 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('goto')) {
         const gotoUrl = urlParams.get('goto');
-        window.open(gotoUrl);
-        alert('Allow pop-ups!')
+        alert('redirected via codesearch.github.io/redirect');
+        window.location.replace(gotoUrl);
       } 
       else {
         (function() {
