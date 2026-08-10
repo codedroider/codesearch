@@ -28,8 +28,8 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('goto')) {
         const gotoUrl = urlParams.get('goto');
-        window.open('https://codedroider.github.io/codesearch');
         window.open(gotoUrl);
+        history.replaceState({}, '', '/?redirected');
         alert('Allow pop-ups!')
       } 
       else {
