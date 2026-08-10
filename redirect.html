@@ -29,7 +29,6 @@
       if (urlParams.has('goto')) {
         const gotoUrl = urlParams.get('goto');
         window.open(gotoUrl);
-        history.replaceState({}, '', '/?redirected');
         alert('Allow pop-ups!')
       } 
       else {
