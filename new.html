@@ -134,10 +134,11 @@
             font-family: var(--font-mono);
             font-size: 0.9rem;
         }
-        
-        #resultsContainer a { color: var(--text-link); text-decoration: none; }
-        #resultsContainer a:hover { text-decoration: underline; }
-        #resultsContainer li { list-style: none; margin-bottom: 1.5rem; }
+#resultsContainer .title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.2rem; }
+#resultsContainer .snippet { font-size: 0.875rem; color: var(--text-primary); margin-bottom: 1.5rem; }
+#resultsContainer .url { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.8rem; word-break: break-all; }
+#resultsContainer a { color: var(--text-link); text-decoration: none; }
+#resultsContainer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -160,7 +161,7 @@
     </div>
 
     <script>
-        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbxSaTGcVMZlKJGsNyj1piOxuBVf7pH7w-iBkogunNj8Yczasup58U0n7VmSxcExckxN/exec";
+        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbwHqFYc11GwDE7tbp4yauHMbXbWzIrqThegywBn6zuHSkJkiXkihkxj3KkBNwz-GYNf/exec";
         const cleanApiUrl = rawApiUrl.replace(/┼/g, ''); // жулик, не воруй
 
         const searchButton = document.getElementById('searchButton');
