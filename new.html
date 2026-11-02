@@ -124,45 +124,6 @@
             gap: 2rem;
         }
 
-        .result-node {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .result-header {
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-
-        .result-header a {
-            color: var(--text-link);
-            text-decoration: none;
-        }
-
-        .result-header a:hover {
-            text-decoration: underline;
-        }
-
-        .result-meta {
-            font-family: var(--font-mono);
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            word-break: break-all;
-        }
-
-        .result-body {
-            background-color: var(--bg-code);
-            border: 1px solid var(--border-muted);
-            border-radius: 6px;
-            padding: 0.85rem 1rem;
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            color: var(--text-primary);
-            white-space: pre-wrap;
-            overflow-x: auto;
-        }
-
         .error-node {
             color: var(--danger-text);
             background-color: var(--danger-bg);
@@ -172,13 +133,17 @@
             font-family: var(--font-mono);
             font-size: 0.9rem;
         }
+        
+        #resultsContainer a { color: var(--text-link); text-decoration: none; }
+        #resultsContainer a:hover { text-decoration: underline; }
+        #resultsContainer li { list-style: none; margin-bottom: 1.5rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>codesearch <span>v3.0</span></h1>
+            <h1>codesearch <span>3.0</span></h1>
         </header>
 
         <main>
@@ -194,7 +159,7 @@
     </div>
 
     <script>
-        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbxDP7vJG8vSP_Rn9GJceCZhZI93Rk3SpukFy5-OUVPmOtP2_e1Ay6rVerua_h3hA6WO/exec";
+        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbxuBGjZpQ5S26n7hJY3upcKjK2YUtC78QYDPJpC_cKXWh1941sjMzxRQR0Tg-OE79Nw/exec";
         const cleanApiUrl = rawApiUrl.replace(/┼/g, ''); // жулик, не воруй
 
         const searchButton = document.getElementById('searchButton');
@@ -224,7 +189,7 @@
                     return;
                 }
 
-                renderResults(data.results);
+                renderResults(data.b_content);
 
             } catch (err) {
                 showError(err.message);
@@ -239,23 +204,14 @@
             }
         });
 
-        function renderResults(results) {
-            if (!results || results.length === 0) {
+        function renderResults(bContent) {
+            if (!bContent) {
                 statusMessage.innerText = 'no matches found bruhhh';
                 return;
             }
 
             statusMessage.style.display = 'none';
-
-            resultsContainer.innerHTML = Array.isArray(results) ? results.map(item => `
-                <div class="result-node">
-                    <div class="result-header">
-                        <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
-                    </div>
-                    <div class="result-meta">${escapeHtml(item.url)}</div>
-                    <div class="result-body">${escapeHtml(item.snippet)}</div>
-                </div>
-            `).join('') : '';
+            resultsContainer.innerHTML = bContent;
         }
 
         function showError(message) {
