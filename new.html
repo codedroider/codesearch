@@ -178,13 +178,13 @@
 
     <div class="container">
         <header>
-            <h1>CodeSearch <span>v3.0</span></h1>
+            <h1>codesearch <span>v3.0</span></h1>
         </header>
 
         <main>
             <div class="search-area">
-                <input type="text" id="queryInput" class="search-input" placeholder="Введите поисковый запрос или сигнатуру функции..." autocomplete="off">
-                <button type="button" id="searchButton" class="search-button">Search</button>
+                <input type="text" id="queryInput" class="search-input" placeholder="What the capital of France?" autocomplete="off">
+                <button type="button" id="searchButton" class="search-button">search</button>
             </div>
 
             <div class="status-message" id="statusMessage"></div>
@@ -194,8 +194,8 @@
     </div>
 
     <script>
-        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbxz7am43GuDDqRzOzg-K6trSfQCsl7kSXNVXqlTeFPPVmBPj575J07PT7Pl-uRRn6hR/exec";
-        const cleanApiUrl = rawApiUrl.replace(/┼/g, '');
+        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbxDP7vJG8vSP_Rn9GJceCZhZI93Rk3SpukFy5-OUVPmOtP2_e1Ay6rVerua_h3hA6WO/exec";
+        const cleanApiUrl = rawApiUrl.replace(/┼/g, ''); // жулик, не воруй
 
         const searchButton = document.getElementById('searchButton');
         const queryInput = document.getElementById('queryInput');
@@ -208,13 +208,13 @@
 
             resultsContainer.innerHTML = '';
             statusMessage.style.display = 'block';
-            statusMessage.innerText = 'Searching index targets...';
+            statusMessage.innerText = 'loading...';
 
             try {
                 const response = await fetch(`${cleanApiUrl}?q=${encodeURIComponent(query)}`);
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP target error: ${response.status}`);
+                    throw new Error(`${response.status}`);
                 }
 
                 const data = await response.json();
@@ -241,7 +241,7 @@
 
         function renderResults(results) {
             if (!results || results.length === 0) {
-                statusMessage.innerText = 'No matches found in active index.';
+                statusMessage.innerText = 'no matches found bruhhh';
                 return;
             }
 
@@ -260,7 +260,7 @@
 
         function showError(message) {
             statusMessage.style.display = 'none';
-            resultsContainer.innerHTML = `<div class="error-node">Runtime error: ${escapeHtml(message)}</div>`;
+            resultsContainer.innerHTML = `<div class="error-node">error brat ${escapeHtml(message)}</div>`;
         }
 
         function escapeHtml(str) {
