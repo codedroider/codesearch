@@ -194,8 +194,8 @@
     </div>
 
     <script>
-        const rawApiUrl = "https://script.google.com/macros/s/AKfycbz1Y8DJIGQBnMpe4jl1_hOV0Ri-2rqHlP2NpEY9_iIZ8vMl1GeOLwFNqt-yr0ukWN7e/exec";
-        const cleanApiUrl = rawApiUrl.replace(//g, '');
+        const rawApiUrl = "https://script┼.google.┼com/macros/s/AKfycbw9Co0dURGQAfmUBvTkWnuoQxi5Mqzg53h4LhH2yeOyee0h_XNiNQbbRBWJd-_tRyyp/exec";
+        const cleanApiUrl = rawApiUrl.replace(/┼/g, '');
 
         const searchButton = document.getElementById('searchButton');
         const queryInput = document.getElementById('queryInput');
@@ -247,7 +247,7 @@
 
             statusMessage.style.display = 'none';
 
-            resultsContainer.innerHTML = results.map(item => `
+            resultsContainer.innerHTML = Array.isArray(results) ? results.map(item => `
                 <div class="result-node">
                     <div class="result-header">
                         <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
@@ -255,7 +255,7 @@
                     <div class="result-meta">${escapeHtml(item.url)}</div>
                     <div class="result-body">${escapeHtml(item.snippet)}</div>
                 </div>
-            `).join('');
+            `).join('') : '';
         }
 
         function showError(message) {
