@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSearch 3.0</title>
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-code: #f6f8fa;
+            --border-muted: #d0d7de;
+            --border-active: #0969da;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-link: #0969da;
+            --btn-bg: #24292f;
+            --btn-text: #ffffff;
+            --danger-bg: #ffebe9;
+            --danger-border: rgba(207, 34, 46, 0.15);
+            --danger-text: #cf222e;
+            --font-mono: ui-monospace, SFMono-Regular, SF Pro Mono, Menlo, Monaco, Consolas, monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            padding: 3rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-muted);
+            padding-bottom: 1rem;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        header h1 span {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background-color: var(--bg-code);
+            border: 1px solid var(--border-muted);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        .search-area {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-muted);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            padding: 0.6rem 0.8rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--border-active);
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+        }
+
+        .search-button {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: 1px solid transparent;
+            border-radius: 6px;
+            padding: 0.6rem 1.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            opacity: 0.9;
+        }
+
+        .status-message {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .results-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .result-node {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .result-header {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .result-header a {
+            color: var(--text-link);
+            text-decoration: none;
+        }
+
+        .result-header a:hover {
+            text-decoration: underline;
+        }
+
+        .result-meta {
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .result-body {
+            background-color: var(--bg-code);
+            border: 1px solid var(--border-muted);
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .error-node {
+            color: var(--danger-text);
+            background-color: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>CodeSearch <span>v3.0</span></h1>
+        </header>
+
+        <main>
+            <div class="search-area">
+                <input type="text" id="queryInput" class="search-input" placeholder="Введите поисковый запрос или сигнатуру функции..." autocomplete="off">
+                <button type="button" id="searchButton" class="search-button">Search</button>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <div class="results-wrapper" id="resultsContainer"></div>
+        </main>
+    </div>
+
+    <script>
+        const rawApiUrl = "https://script.google.com/macros/s/AKfycbz1Y8DJIGQBnMpe4jl1_hOV0Ri-2rqHlP2NpEY9_iIZ8vMl1GeOLwFNqt-yr0ukWN7e/exec";
+        const cleanApiUrl = rawApiUrl.replace(//g, '');
+
+        const searchButton = document.getElementById('searchButton');
+        const queryInput = document.getElementById('queryInput');
+        const statusMessage = document.getElementById('statusMessage');
+        const resultsContainer = document.getElementById('resultsContainer');
+
+        async function executeSearch() {
+            const query = queryInput.value.trim();
+            if (!query) return;
+
+            resultsContainer.innerHTML = '';
+            statusMessage.style.display = 'block';
+            statusMessage.innerText = 'Searching index targets...';
+
+            try {
+                const response = await fetch(`${cleanApiUrl}?q=${encodeURIComponent(query)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP target error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+
+                renderResults(data.results);
+
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        searchButton.addEventListener('click', executeSearch);
+
+        queryInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                executeSearch();
+            }
+        });
+
+        function renderResults(results) {
+            if (!results || results.length === 0) {
+                statusMessage.innerText = 'No matches found in active index.';
+                return;
+            }
+
+            statusMessage.style.display = 'none';
+
+            resultsContainer.innerHTML = results.map(item => `
+                <div class="result-node">
+                    <div class="result-header">
+                        <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
+                    </div>
+                    <div class="result-meta">${escapeHtml(item.url)}</div>
+                    <div class="result-body">${escapeHtml(item.snippet)}</div>
+                </div>
+            `).join('');
+        }
+
+        function showError(message) {
+            statusMessage.style.display = 'none';
+            resultsContainer.innerHTML = `<div class="error-node">Runtime error: ${escapeHtml(message)}</div>`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
